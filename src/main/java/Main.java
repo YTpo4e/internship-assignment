@@ -2,6 +2,7 @@ import main.java.Employee;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
 
@@ -9,7 +10,7 @@ public class Main {
     public static void main(String[] args){
         File file = new File(args[0]);
 
-        Departments dps = new Departments();
+        Map<String, Department> dps = new HashMap<>();
         try (Scanner scanner = new Scanner(file)){
 
             while (scanner.hasNextLine()) {
@@ -18,14 +19,14 @@ public class Main {
                 Employee em = new Employee(employee);
 
 
-                Department al = dps.departments.get(employee[2]);
+                Department al = dps.get(employee[2]);
 
                 if (al == null) {
                     al = new Department();
                     al.getStaff().add(em);
-                    dps.departments.put(employee[2], al);
+                    dps.put(employee[2], al);
                 } else {
-                    dps.departments.get(employee[2]).getStaff().add(em);
+                    dps.get(employee[2]).getStaff().add(em);
 
                 }
 
@@ -35,15 +36,8 @@ public class Main {
             System.out.println("Cannot read file " + e.getMessage());
         }
 
-
-        for (Map.Entry<String, Department> d : dps.departments.entrySet()) {
-            for (int i = 0; i < d.getValue().getStaff().size(); i++) {
-                System.out.println(d.getKey() + " " + d.getValue().getStaff().get(i).getFullName());
-            }
-        }
-
-        dps.departments.get("IT").setAverageSalary();
-        System.out.println(dps.departments.get("IT").getAverageSalary());
+        dps.get("IT").setAverageSalary();
+        System.out.println(dps.get("IT").getAverageSalary());
 
     }
 }
