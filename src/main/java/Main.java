@@ -37,7 +37,7 @@ public class Main {
         }
 
         dps.get("IT").setAverageSalary();
-        System.out.println(dps.get("IT").getAverageSalary());
+        dps.get("IT").infoSalary();
 
     }
 }
