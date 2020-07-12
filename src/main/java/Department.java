@@ -12,9 +12,9 @@ public class Department {
 
         for (int i = 0; i < staff.size(); i++) {
             averageSalary += staff.get(i).getSalary();
-            averageSalary /= staff.size();
-
         }
+
+        averageSalary /= staff.size();
     }
 
 
