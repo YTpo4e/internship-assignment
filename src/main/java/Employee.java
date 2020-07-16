@@ -7,23 +7,23 @@ public class Employee {
     private String position;
 
     private Employee(String[] employee) {
-        firstName = employee[0];
-        secondName = employee[1];
-        salary = new BigDecimal(employee[3]);
-        position = employee[4];
+        firstName = employee[0].trim();
+        secondName = employee[1].trim();
+        salary = new BigDecimal(employee[3].trim());
+        position = employee[4].trim();
     }
 
 
     public static Employee createEmployee(int counter, String... em) {
         try {
-            String[] decimalPoint = em[3].split("\\.");
+            String[] decimalPoint = em[3].trim().split("\\.");
             if (decimalPoint.length > 1) {
                 if (decimalPoint[1].length() > 2) {
-                    throw new IllegalAccessException();
+                    throw new NumberFormatException();
                 }
             }
             return new Employee(em);
-        } catch (IllegalAccessException e) {
+        } catch (NumberFormatException e) {
             System.out.println("Line " + counter + " contains an incorrect salary.");
         } catch (Exception e) {
             System.out.println("Incorrect data entered in line " + counter + ".");

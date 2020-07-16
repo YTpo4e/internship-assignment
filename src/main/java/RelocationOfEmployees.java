@@ -24,7 +24,7 @@ public class RelocationOfEmployees {
         int counter = 1;
             while (scanner.hasNextLine()) {
                 String line = scanner.nextLine();
-                String[] employeeInformation = line.split(" ");
+                String[] employeeInformation = line.split(";");
                 Employee employee = Employee.createEmployee(counter, employeeInformation);
                 if (employee == null) {
                     counter++;
@@ -115,8 +115,8 @@ public class RelocationOfEmployees {
                         copy.get(keys[counter]).getAverageSalary() > map.get(keys[counter]).getAverageSalary()) {
                     System.out.println("When transferring an employee " + employee.getFirstName() + " " +
                             employee.getSecondName() + " the " + keys[i] + " department to " + keys[counter]);
-                    System.out.println("Was: " + keys[i] + " department " + map.get(keys[i]).getAverageSalary());
-                    System.out.println("Now: " + keys[i] +" department " + copy.get(keys[i]).getAverageSalary());
+                    System.out.println("Was: " + keys[i] + "department " + map.get(keys[i]).getAverageSalary());
+                    System.out.println("Now: " + keys[i] + "department " + copy.get(keys[i]).getAverageSalary());
                     System.out.println("Was " + keys[counter] + "department " + map.get(keys[counter]).getAverageSalary());
                     System.out.println("Now: " + keys[counter] +" department " + copy.get(keys[counter]).getAverageSalary());
                     System.out.println();
