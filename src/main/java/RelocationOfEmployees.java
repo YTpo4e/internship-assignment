@@ -46,9 +46,6 @@ public class RelocationOfEmployees {
             System.out.println("Cannot read file " + e.getMessage());
         }
 
-
-
-
         return departmentMap;
     }
 
@@ -56,10 +53,10 @@ public class RelocationOfEmployees {
         for (Map.Entry<String, Department> m : map.entrySet()) {
             System.out.println("----Department " + m.getKey()  + "----");
             for (int i = 0; i < m.getValue().size(); i++) {
-                System.out.print(m.getValue().getStaff(i).getSecondName() + " ");
-                System.out.print(m.getValue().getStaff(i).getFirstName() + " ");
-                System.out.print(m.getValue().getStaff(i).getPosition() + " ");
-                System.out.print(m.getValue().getStaff(i).getSalary() + " ");
+                System.out.print(m.getValue().getEmployee(i).getSecondName() + " ");
+                System.out.print(m.getValue().getEmployee(i).getFirstName() + " ");
+                System.out.print(m.getValue().getEmployee(i).getPosition() + " ");
+                System.out.print(m.getValue().getEmployee(i).getSalary() + " ");
                 System.out.println();
             }
             System.out.println();
@@ -76,7 +73,7 @@ public class RelocationOfEmployees {
             for (int j = 0; j < departments[i].size(); counter++) {
                 Map<String, Department> copy = deepCloneMap(map);
 
-                Employee employee = copy.get(keys[i]).getStaff(j);
+                Employee employee = copy.get(keys[i]).getEmployee(j);
                 copy.get(keys[i]).removeEmployee(employee);
                 copy.get(keys[counter]).addEmployee(employee);
 
@@ -108,7 +105,7 @@ public class RelocationOfEmployees {
             for (int j = 0; j < departments[i].size(); counter--) {
                 Map<String, Department> copy = deepCloneMap(map);
 
-                Employee employee = copy.get(keys[i]).getStaff(j);
+                Employee employee = copy.get(keys[i]).getEmployee(j);
                 copy.get(keys[i]).removeEmployee(employee);
                 copy.get(keys[counter]).addEmployee(employee);
                 if (copy.get(keys[i]).getAverageSalary() > map.get(keys[i]).getAverageSalary() &&

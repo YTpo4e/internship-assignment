@@ -17,7 +17,7 @@ public class Department {
 
 
 
-    public Employee getStaff(int i) {
+    public Employee getEmployee(int i) {
         return staff.get(i);
     }
 
