@@ -1,8 +1,8 @@
 import java.math.BigDecimal;
 
 public class Employee {
-    private String firstName;
-    private String secondName;
+    final private String firstName;
+    final private String secondName;
     private BigDecimal salary;
     private String position;
 
