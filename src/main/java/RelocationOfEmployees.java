@@ -31,11 +31,11 @@ public class RelocationOfEmployees {
                     continue;
                 }
 
-                Department department = departmentMap.get(employeeInformation[2]);
+                Department department = departmentMap.get(employeeInformation[2].trim());
 
-                if (!departmentMap.containsKey(employeeInformation[2])) {
+                if (!departmentMap.containsKey(employeeInformation[2].trim())) {
                     department = new Department();
-                    departmentMap.put(employeeInformation[2], department);
+                    departmentMap.put(employeeInformation[2].trim(), department);
                 }
 
                 department.addEmployee(employee);
@@ -69,31 +69,31 @@ public class RelocationOfEmployees {
         Department[] departments = departmentMap.values().toArray(new Department[departmentMap.size()]);
 
         for (int from = 0; from < keys.length - 1; from++) {
-            int  toTheDepartment = from;
-            for (int employeeNumber  = 0; employeeNumber < departments[from].size();  toTheDepartment++) {
+            int toTheDepartment = from;
+            for (int employeeNumber  = 0; employeeNumber < departments[from].size();  ++toTheDepartment) {
                 Map<String, Department> copy = deepCloneMap(departmentMap);
 
                 Employee employee = copy.get(keys[from]).getEmployee(employeeNumber );
                 copy.get(keys[from]).removeEmployee(employee);
-                copy.get(keys[ toTheDepartment]).addEmployee(employee);
+                copy.get(keys[toTheDepartment]).addEmployee(employee);
 
                 if (copy.get(keys[from]).getAverageSalary() > departmentMap.get(keys[from]).getAverageSalary() &&
-                    copy.get(keys[ toTheDepartment]).getAverageSalary() > departmentMap.get(keys[toTheDepartment]).getAverageSalary()) {
+                    copy.get(keys[toTheDepartment]).getAverageSalary() > departmentMap.get(keys[toTheDepartment]).getAverageSalary()) {
                     System.out.println("When transferring an employee " + employee.getFirstName() + " " +
-                            employee.getSecondName() + " the " + keys[from] + " department to " + keys[ toTheDepartment]);
+                            employee.getSecondName() + " the " + keys[from] + " department to " + keys[toTheDepartment]);
                     System.out.println("Was: " + keys[from] + "department " + departmentMap.get(keys[from]).getAverageSalary());
                     System.out.println("Now: " + keys[from] +"department  " + copy.get(keys[from]).getAverageSalary());
-                    System.out.println("Was: " + keys[ toTheDepartment] + "department " + departmentMap.get(keys[ toTheDepartment]).getAverageSalary());
-                    System.out.println("Now: " + keys[ toTheDepartment] +"department " + copy.get(keys[ toTheDepartment]).getAverageSalary());
+                    System.out.println("Was: " + keys[toTheDepartment] + "department " + departmentMap.get(keys[toTheDepartment]).getAverageSalary());
+                    System.out.println("Now: " + keys[toTheDepartment] +"department " + copy.get(keys[toTheDepartment]).getAverageSalary());
                     System.out.println();
                     String transferInformation = "When transferring an employee " + employee.getFirstName() + " " +
-                            employee.getSecondName() + " the " + keys[from] + " department to " + keys[ toTheDepartment] + "\n";
+                            employee.getSecondName() + " the " + keys[from] + " department to " + keys[toTheDepartment] + "\n";
                     writeToFile(transferInformation, out);
 
                 }
 
-                if ( toTheDepartment == keys.length - 1) {
-                     toTheDepartment = from;
+                if (toTheDepartment == keys.length - 1) {
+                    toTheDepartment = from;
                     employeeNumber ++;
                 }
             }
@@ -123,9 +123,9 @@ public class RelocationOfEmployees {
                     writeToFile(transferInformation, out);
 
                 }
-                if ( toTheDepartment == 0) {
+                if (toTheDepartment == 0) {
                     employeeNumber++;
-                     toTheDepartment = from;
+                    toTheDepartment = from;
                 }
             }
         }
