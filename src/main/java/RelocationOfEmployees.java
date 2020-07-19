@@ -6,8 +6,7 @@ public class RelocationOfEmployees {
         if (args.length == 2) {
             Map<String, Department> departmentMap = downloadFromFile(args[0]);
             showTable(departmentMap);
-            transferOfEmployees(departmentMap, args[1]);
-            System.out.println();
+            transferAlternate(departmentMap, args[1]);
             showTable(departmentMap);
 
         } else {
@@ -31,11 +30,11 @@ public class RelocationOfEmployees {
                     continue;
                 }
 
-                Department department = departmentMap.get(employeeInformation[2]);
+                Department department = departmentMap.get(employeeInformation[2].trim());
 
-                if (!departmentMap.containsKey(employeeInformation[2])) {
+                if (!departmentMap.containsKey(employeeInformation[2].trim())) {
                     department = new Department();
-                    departmentMap.put(employeeInformation[2], department);
+                    departmentMap.put(employeeInformation[2].trim(), department);
                 }
 
                 department.addEmployee(employee);
@@ -63,73 +62,39 @@ public class RelocationOfEmployees {
         }
     }
 
-    static void transferOfEmployees(Map<String, Department> departmentMap, String out) {
+    static void transferAlternate(Map<String, Department> departmentMap, String out) {
+        for (Map.Entry<String, Department> departments : departmentMap.entrySet()) {
+            Map<String, Department> tempDepartments = deepCloneMap(departmentMap);
+            Department department = departments.getValue();
+            String nameDepartment = departments.getKey();
+            department.fromTransferList();
 
-        String[] keys = departmentMap.keySet().toArray(new String[departmentMap.size()]);
-        Department[] departments = departmentMap.values().toArray(new Department[departmentMap.size()]);
+            performTransfer(tempDepartments, department, nameDepartment, out);
+        }
+    }
 
-        for (int from = 0; from < keys.length - 1; from++) {
-            int  toTheDepartment = from;
-            for (int employeeNumber  = 0; employeeNumber < departments[from].size();  toTheDepartment++) {
-                Map<String, Department> copy = deepCloneMap(departmentMap);
-
-                Employee employee = copy.get(keys[from]).getEmployee(employeeNumber );
-                copy.get(keys[from]).removeEmployee(employee);
-                copy.get(keys[ toTheDepartment]).addEmployee(employee);
-
-                if (copy.get(keys[from]).getAverageSalary() > departmentMap.get(keys[from]).getAverageSalary() &&
-                    copy.get(keys[ toTheDepartment]).getAverageSalary() > departmentMap.get(keys[toTheDepartment]).getAverageSalary()) {
-                    System.out.println("When transferring an employee " + employee.getFirstName() + " " +
-                            employee.getSecondName() + " the " + keys[from] + " department to " + keys[ toTheDepartment]);
-                    System.out.println("Was: " + keys[from] + "department " + departmentMap.get(keys[from]).getAverageSalary());
-                    System.out.println("Now: " + keys[from] +"department  " + copy.get(keys[from]).getAverageSalary());
-                    System.out.println("Was: " + keys[ toTheDepartment] + "department " + departmentMap.get(keys[ toTheDepartment]).getAverageSalary());
-                    System.out.println("Now: " + keys[ toTheDepartment] +"department " + copy.get(keys[ toTheDepartment]).getAverageSalary());
-                    System.out.println();
-                    String transferInformation = "When transferring an employee " + employee.getFirstName() + " " +
-                            employee.getSecondName() + " the " + keys[from] + " department to " + keys[ toTheDepartment] + "\n";
-                    writeToFile(transferInformation, out);
-
-                }
-
-                if ( toTheDepartment == keys.length - 1) {
-                     toTheDepartment = from;
-                    employeeNumber ++;
-                }
+    static void performTransfer(Map<String, Department> departmentMap, Department department, String nameDepartment,
+                                String out) {
+        for (Map.Entry<String, Department> current : departmentMap.entrySet()) {
+            Department transferTo = current.getValue();
+            String nameDepartment1 = current.getKey();
+            if(transferTo.equals(department)) {
+                continue;
             }
 
-        }
+            List<Employee> listToTransfer = department.getTransferList();
 
-        for (int from = keys.length - 1; from >= 1; from--) {
-            int  toTheDepartment = from;
-            for (int employeeNumber = 0; employeeNumber < departments[from].size();  toTheDepartment--) {
-                Map<String, Department> copy = deepCloneMap(departmentMap);
-
-                Employee employee = copy.get(keys[from]).getEmployee(employeeNumber);
-                copy.get(keys[from]).removeEmployee(employee);
-                copy.get(keys[ toTheDepartment]).addEmployee(employee);
-                if (copy.get(keys[from]).getAverageSalary() > departmentMap.get(keys[from]).getAverageSalary() &&
-                        copy.get(keys[ toTheDepartment]).getAverageSalary() > departmentMap.get(keys[ toTheDepartment]).getAverageSalary()) {
-                    System.out.println("When transferring an employee " + employee.getFirstName() + " " +
-                            employee.getSecondName() + " the " + keys[from] + " department to " + keys[ toTheDepartment]);
-                    System.out.println("Was: " + keys[from] + "department " + departmentMap.get(keys[from]).getAverageSalary());
-                    System.out.println("Now: " + keys[from] + "department " + copy.get(keys[from]).getAverageSalary());
-                    System.out.println("Was " + keys[ toTheDepartment] + "department " + departmentMap.get(keys[ toTheDepartment]).getAverageSalary());
-                    System.out.println("Now: " + keys[ toTheDepartment] +" department " + copy.get(keys[ toTheDepartment]).getAverageSalary());
-                    System.out.println();
-
-                    String transferInformation = "When transferring an employee " + employee.getFirstName() + " " +
-                            employee.getSecondName() + " the " + keys[from] + " department to " + keys[ toTheDepartment] + "\n";
-                    writeToFile(transferInformation, out);
-
-                }
-                if ( toTheDepartment == 0) {
-                    employeeNumber++;
-                     toTheDepartment = from;
+            for (Employee employee : listToTransfer) {
+                double currentAverage = transferTo.getAverageSalary();
+                transferTo.addEmployee(employee);
+                if (currentAverage < transferTo.getAverageSalary()) {
+                    String information = "Сотрудник " + employee.getFirstName() + " " + employee.getSecondName() +
+                            " : из " + nameDepartment + " в " + nameDepartment1 +"\n";
+                    System.out.println(information);
+                    writeToFile(information, out);
                 }
             }
         }
-
     }
 
     static Map<String, Department> deepCloneMap(Map<String, Department> original)  {
