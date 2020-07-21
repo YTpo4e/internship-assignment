@@ -1,7 +1,6 @@
-package com.innotechnum.exe1;
+package study.to_another_department;
 
 import java.math.BigDecimal;
-import java.util.Objects;
 
 public class Employee {
     final private String firstName;

@@ -1,4 +1,4 @@
-package com.innotechnum.exe1;
+package study.to_another_department;
 
 import java.io.*;
 import java.util.*;
