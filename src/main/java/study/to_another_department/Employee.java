@@ -1,6 +1,7 @@
 package study.to_another_department;
 
 import java.math.BigDecimal;
+import java.util.Objects;
 
 public class Employee {
     final private String firstName;
@@ -54,7 +55,7 @@ public class Employee {
 
     static boolean checkingForEmptyArguments(String... infoEmployee) {
         for (String string : infoEmployee) {
-            if (string.matches("\\s*")) {
+            if (string.matches("\\s*") || Objects.equals(string.trim(), "null")) {
                 return true;
             }
         }
