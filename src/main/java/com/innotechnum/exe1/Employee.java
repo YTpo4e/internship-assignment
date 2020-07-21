@@ -1,4 +1,7 @@
+package com.innotechnum.exe1;
+
 import java.math.BigDecimal;
+import java.util.Objects;
 
 public class Employee {
     final private String firstName;
@@ -16,17 +19,20 @@ public class Employee {
 
     public static Employee createEmployee(int counter, String... em) {
         try {
+            if (checkingForEmptyArguments(em)) {
+                throw new NullPointerException();
+            }
             String[] decimalPoint = em[3].trim().split("\\.");
             if (decimalPoint.length > 1) {
                 if (decimalPoint[1].length() > 2) {
-                    throw new NumberFormatException();
+                    throw new NumberFormatException(String.valueOf(counter));
                 }
             }
             return new Employee(em);
         } catch (NumberFormatException e) {
-            System.out.println("Line " + counter + " contains an incorrect salary.");
-        } catch (Exception e) {
-            System.out.println("Incorrect data entered in line " + counter + ".");
+            System.out.println("Line " + e.getMessage() + " contains an incorrect salary. ");
+        } catch (NullPointerException e) {
+            System.out.println("Какое-то значение пустое в строке "  + counter + ".");
         }
         return null;
     }
@@ -45,5 +51,14 @@ public class Employee {
 
     public String getPosition() {
         return position;
+    }
+
+    static boolean checkingForEmptyArguments(String... infoEmployee) {
+        for (String string : infoEmployee) {
+            if (string.matches("\\s*")) {
+                return true;
+            }
+        }
+        return false;
     }
 }

@@ -1,3 +1,5 @@
+package com.innotechnum.exe1;
+
 import java.io.*;
 import java.util.*;
 
@@ -24,21 +26,24 @@ public class RelocationOfEmployees {
             while (scanner.hasNextLine()) {
                 String line = scanner.nextLine();
                 String[] employeeInformation = line.split(";");
-                Employee employee = Employee.createEmployee(counter, employeeInformation);
-                if (employee == null) {
+
+                if (employeeInformation.length == 5) {
+                    Employee employee = Employee.createEmployee(counter, employeeInformation);
+
+                    if (employee == null) {
+                        counter++;
+                        continue;
+                    }
+
+                    Department department = departmentMap.getOrDefault(employeeInformation[2].trim(), new Department());
+                    department.addEmployee(employee);
+                    departmentMap.putIfAbsent(employeeInformation[2].trim(), department);
+
                     counter++;
-                    continue;
+                } else {
+                    System.out.println("Неверное количство аргументов в строке " + counter + ".");
+                    counter++;
                 }
-
-                Department department = departmentMap.get(employeeInformation[2].trim());
-
-                if (!departmentMap.containsKey(employeeInformation[2].trim())) {
-                    department = new Department();
-                    departmentMap.put(employeeInformation[2].trim(), department);
-                }
-
-                department.addEmployee(employee);
-                counter++;
             }
 
         } catch (IOException e) {
@@ -50,8 +55,8 @@ public class RelocationOfEmployees {
 
     static void showTable(Map<String, Department> map) {
         for (Map.Entry<String, Department> m : map.entrySet()) {
-            System.out.println("----Department " + m.getKey()  + "----");
-            for (int i = 0; i < m.getValue().size(); i++) {
+            System.out.println("----Department " + m.getKey()  + "----   " + m.getValue().getAverageSalary());
+            for (int i = 0; i < m.getValue().getStaff().size(); i++) {
                 System.out.print(m.getValue().getEmployee(i).getSecondName() + " ");
                 System.out.print(m.getValue().getEmployee(i).getFirstName() + " ");
                 System.out.print(m.getValue().getEmployee(i).getPosition() + " ");
@@ -67,27 +72,25 @@ public class RelocationOfEmployees {
             Map<String, Department> tempDepartments = deepCloneMap(departmentMap);
             Department department = departments.getValue();
             String nameDepartment = departments.getKey();
-            department.fromTransferList();
 
             performTransfer(tempDepartments, department, nameDepartment, out);
         }
     }
 
-    static void performTransfer(Map<String, Department> departmentMap, Department department, String nameDepartment,
+    static void performTransfer(Map<String, Department> tempDepartment, Department department, String nameDepartment,
                                 String out) {
-        for (Map.Entry<String, Department> current : departmentMap.entrySet()) {
+        for (Map.Entry<String, Department> current : tempDepartment.entrySet()) {
             Department transferTo = current.getValue();
             String nameDepartment1 = current.getKey();
             if(transferTo.equals(department)) {
                 continue;
             }
 
-            List<Employee> listToTransfer = department.getTransferList();
+            List<Employee> listToTransfer = department.fromTransferList();
 
             for (Employee employee : listToTransfer) {
                 double currentAverage = transferTo.getAverageSalary();
-                transferTo.addEmployee(employee);
-                if (currentAverage < transferTo.getAverageSalary()) {
+                if (currentAverage < employee.getSalary().doubleValue()) {
                     String information = "Сотрудник " + employee.getFirstName() + " " + employee.getSecondName() +
                             " : из " + nameDepartment + " в " + nameDepartment1 +"\n";
                     System.out.println(information);
