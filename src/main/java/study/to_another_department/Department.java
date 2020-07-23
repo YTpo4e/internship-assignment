@@ -35,14 +35,14 @@ public class Department {
     }
 
 
-    public double getAverageSalary() {
+    public BigDecimal getAverageSalary() {
         BigDecimal averageSalary = new BigDecimal(0);
 
         for (int i = 0; i < staff.size(); i++) {
             averageSalary = staff.get(i).getSalary().add(averageSalary);
         }
         averageSalary = averageSalary.divide(new BigDecimal(staff.size()), 2);
-        return averageSalary.doubleValue();
+        return averageSalary;
     }
 
 
@@ -61,9 +61,10 @@ public class Department {
 
     public List<Employee> fromTransferList() {
         final List<Employee> transferList = new ArrayList<>();
-        double averageSalary = getAverageSalary();
+        BigDecimal averageSalary = getAverageSalary();
         for (Employee employee : staff) {
-            if (employee.getSalary().doubleValue() < averageSalary) {
+            int choice = employee.getSalary().compareTo(averageSalary);
+            if (choice == -1) {
                 transferList.add(employee);
             }
         }

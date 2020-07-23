@@ -18,6 +18,12 @@ public class Employee {
 
 
     public static Employee createEmployee(int counter, String... em) {
+
+        if (em.length != 5) {
+            System.out.println("Неверное количество аргументов в строке " + counter);
+            return null;
+        }
+
         try {
             if (checkingForEmptyArguments(em)) {
                 throw new NullPointerException();

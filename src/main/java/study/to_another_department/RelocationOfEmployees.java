@@ -1,6 +1,7 @@
 package study.to_another_department;
 
 import java.io.*;
+import java.math.BigDecimal;
 import java.util.*;
 
 public class RelocationOfEmployees {
@@ -8,8 +9,12 @@ public class RelocationOfEmployees {
         if (args.length == 2) {
             Map<String, Department> departmentMap = downloadFromFile(args[0]);
             showTable(departmentMap);
-            transferAlternate(departmentMap, args[1]);
+            FileWriter fileWriter = openFile(args[1]);
+            if (!fileWriter.equals(null) ) {
+            transferAlternate(departmentMap, fileWriter);
             showTable(departmentMap);
+            closeFile(fileWriter);
+            }
 
         } else {
             System.out.println("Wrong number of arguments entered.");
@@ -27,23 +32,19 @@ public class RelocationOfEmployees {
                 String line = scanner.nextLine();
                 String[] employeeInformation = line.split(";");
 
-                if (employeeInformation.length == 5) {
-                    Employee employee = Employee.createEmployee(counter, employeeInformation);
+                Employee employee = Employee.createEmployee(counter, employeeInformation);
 
-                    if (employee == null) {
-                        counter++;
-                        continue;
-                    }
-
-                    Department department = departmentMap.getOrDefault(employeeInformation[2].trim(), new Department());
-                    department.addEmployee(employee);
-                    departmentMap.putIfAbsent(employeeInformation[2].trim(), department);
-
+                if (employee == null) {
                     counter++;
-                } else {
-                    System.out.println("Неверное количство аргументов в строке " + counter + ".");
-                    counter++;
+                    continue;
                 }
+
+                Department department = departmentMap.getOrDefault(employeeInformation[2].trim(), new Department());
+                department.addEmployee(employee);
+                departmentMap.putIfAbsent(employeeInformation[2].trim(), department);
+
+                counter++;
+
             }
 
         } catch (IOException e) {
@@ -67,55 +68,60 @@ public class RelocationOfEmployees {
         }
     }
 
-    static void transferAlternate(Map<String, Department> departmentMap, String out) {
+    static void transferAlternate(Map<String, Department> departmentMap, FileWriter fileWriter) {
         for (Map.Entry<String, Department> departments : departmentMap.entrySet()) {
-            Map<String, Department> tempDepartments = deepCloneMap(departmentMap);
-            Department department = departments.getValue();
-            String nameDepartment = departments.getKey();
-
-            performTransfer(tempDepartments, department, nameDepartment, out);
+            performTransfer(departmentMap, departments, fileWriter);
         }
     }
 
-    static void performTransfer(Map<String, Department> tempDepartment, Department department, String nameDepartment,
-                                String out) {
+    static void performTransfer(Map<String, Department> tempDepartment, Map.Entry<String, Department> departments,
+                                FileWriter fileWriter) {
         for (Map.Entry<String, Department> current : tempDepartment.entrySet()) {
             Department transferTo = current.getValue();
-            String nameDepartment1 = current.getKey();
-            if(transferTo.equals(department)) {
+            if(transferTo.equals(departments.getValue())) {
                 continue;
             }
 
-            List<Employee> listToTransfer = department.fromTransferList();
+            List<Employee> listToTransfer = departments.getValue().fromTransferList();
 
             for (Employee employee : listToTransfer) {
-                double currentAverage = transferTo.getAverageSalary();
-                if (currentAverage < employee.getSalary().doubleValue()) {
+                BigDecimal currentAverage = transferTo.getAverageSalary();
+                int choice = currentAverage.compareTo(employee.getSalary());
+                if (choice == -1) {
                     String information = "Сотрудник " + employee.getFirstName() + " " + employee.getSecondName() +
-                            " : из " + nameDepartment + " в " + nameDepartment1 +"\n";
+                            " : из " + departments.getKey() + " в " + current.getKey() +"\n";
                     System.out.println(information);
-                    writeToFile(information, out);
+                    writeToFile(information, fileWriter);
                 }
             }
         }
     }
 
-    static Map<String, Department> deepCloneMap(Map<String, Department> original)  {
-        Map<String, Department> copy = new HashMap<>(original.size());
 
-        for (String s : original.keySet()) {
-            Department department = new Department(original.get(s).getStaff());
-            copy.put(s, department);
-        }
-        return copy;
-    }
 
-    static void writeToFile(String information, String out) {
-        File file = new File(out);
-        try (FileWriter fileWriter = new FileWriter(out, true)) {
+    static void writeToFile(String information, FileWriter fileWriter)  {
+        try {
             fileWriter.write(information);
         } catch (IOException e) {
+            System.out.println("Не удалось записать в файл");
+        }
+    }
+
+    static FileWriter openFile(String out) {
+        File file = new File(out);
+        try {
+             return new FileWriter(file, true);
+        } catch (IOException e) {
             System.out.println("Failed to write to file: " + e.getMessage());
+        }
+        return null;
+    }
+
+    static void closeFile(FileWriter fileWriter) {
+        try {
+            fileWriter.close();
+        } catch (IOException e) {
+            System.out.println("Не удалось закрыть файл");
         }
     }
 }
