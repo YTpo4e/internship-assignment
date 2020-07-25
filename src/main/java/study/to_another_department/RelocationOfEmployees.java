@@ -83,8 +83,8 @@ public class RelocationOfEmployees {
             if(transferTo.equals(departments.getValue())) {
                 continue;
             }
-
-            List<List<Employee>> listToTransfer = departments.getValue().fromTransferList();
+            departments.getValue().fromTransferList(0);
+            List<List<Employee>> listToTransfer = departments.getValue().transferList;
 
             //for (List<Employee> employeeList : listToTransfer){
              //   String information;

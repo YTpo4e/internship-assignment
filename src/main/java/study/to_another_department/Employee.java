@@ -3,7 +3,7 @@ package study.to_another_department;
 import java.math.BigDecimal;
 import java.util.Objects;
 
-public class Employee {
+public class Employee implements Comparable<Employee>{
     final private String firstName;
     final private String secondName;
     private BigDecimal salary;
@@ -66,5 +66,10 @@ public class Employee {
             }
         }
         return false;
+    }
+
+    @Override
+    public int compareTo(Employee o) {
+        return getSalary().compareTo(o.getSalary());
     }
 }

@@ -2,9 +2,7 @@ package study.to_another_department;
 
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 public class Department {
 
@@ -69,34 +67,46 @@ public class Department {
         return Objects.hash(staff);
     }
 
-    public List<List<Employee>> fromTransferList() {
-        final List<List<Employee>> transferList = new ArrayList<>();
+    public final List<List<Employee>> transferList = new ArrayList<>();
+    List<Employee> couple = new ArrayList<>();
+    public void fromTransferList(int i) {
+
         BigDecimal averageSalary = getAverageSalary();
-        for (Employee employee : staff) {
-            List<Employee> couple = new ArrayList<>();
+        Employee employee = getEmployee(i);
+
+        if(couple.isEmpty()) {
             if (employee.getSalary().compareTo(averageSalary) == -1) {
                 couple.add(employee);
                 transferList.add(new ArrayList<>(couple));
-                for (Employee employee1 : staff) {
-                    if (employee.equals(employee1)) {
-                        continue;
-                    }
-
-                    int choice1 = calculateAverageSalary(couple).add(employee.getSalary()).compareTo(averageSalary);
-                    if (choice1 == -1) {
-                        couple.add(employee1);
-                        transferList.add(new ArrayList<>(couple));
-                    }
-                    couple.remove(employee1);
-
-                }
-
+                fromTransferList(0);
 
             }
+        } else  {
+            BigDecimal salary = calculateAverageSalary(couple).multiply(new BigDecimal(couple.size()));
+            salary = salary.add(employee.getSalary());
+            salary = salary.divide(new BigDecimal(couple.size() + 1), 2);
+
+            if (salary.compareTo(averageSalary) == -1 && !couple.contains(employee)) {
+                couple.add(employee);
+                Collections.sort(couple);
+                if (!transferList.contains(couple)) {
+                transferList.add(new ArrayList<>(couple));
+
+                fromTransferList(0);
+                couple.remove(employee);
+                }
+            }
         }
-        return transferList;
+
+        if (i + 1 < staff.size()){
+            fromTransferList(i + 1);
+        }
+
+
     }
 
 
 
+
 }
+
