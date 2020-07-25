@@ -4,6 +4,8 @@ import java.io.*;
 import java.math.BigDecimal;
 import java.util.*;
 
+import static study.to_another_department.Department.calculateAverageSalary;
+
 public class RelocationOfEmployees {
     public static void main(String[] args){
         if (args.length == 2) {
@@ -82,20 +84,26 @@ public class RelocationOfEmployees {
                 continue;
             }
 
-            List<Employee> listToTransfer = departments.getValue().fromTransferList();
+            List<List<Employee>> listToTransfer = departments.getValue().fromTransferList();
 
-            for (Employee employee : listToTransfer) {
-                BigDecimal currentAverage = transferTo.getAverageSalary();
-                int choice = currentAverage.compareTo(employee.getSalary());
-                if (choice == -1) {
-                    String information = "Сотрудник " + employee.getFirstName() + " " + employee.getSecondName() +
-                            " : из " + departments.getKey() + " в " + current.getKey() +"\n";
-                    System.out.println(information);
-                    writeToFile(information, fileWriter);
+            //for (List<Employee> employeeList : listToTransfer){
+             //   String information;
+                 for (List<Employee> employeeList : listToTransfer) {
+                     BigDecimal currentAverage = transferTo.getAverageSalary();
+
+                     if (currentAverage.compareTo(calculateAverageSalary(employeeList)) == -1) {
+                         String information = "Сотрудники из отдела " + departments.getKey() + ": ";
+                         for (Employee employee: employeeList) {
+                             information += employee.getFirstName() + " " + employee.getSecondName() + ",";
+                         }
+
+                         information += " в отдел "  + current.getKey() +"\n";
+                         writeToFile(information, fileWriter);
+
+                     }
                 }
             }
         }
-    }
 
 
 

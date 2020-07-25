@@ -45,6 +45,16 @@ public class Department {
         return averageSalary;
     }
 
+    public static BigDecimal calculateAverageSalary(List<Employee> list) {
+        BigDecimal averageSalary = new BigDecimal(0);
+
+        for (int i = 0; i < list.size(); i++) {
+            averageSalary = list.get(i).getSalary().add(averageSalary);
+        }
+        averageSalary = averageSalary.divide(new BigDecimal(list.size()), 2);
+        return averageSalary;
+    }
+
 
     @Override
     public boolean equals(Object o) {
@@ -59,13 +69,29 @@ public class Department {
         return Objects.hash(staff);
     }
 
-    public List<Employee> fromTransferList() {
-        final List<Employee> transferList = new ArrayList<>();
+    public List<List<Employee>> fromTransferList() {
+        final List<List<Employee>> transferList = new ArrayList<>();
         BigDecimal averageSalary = getAverageSalary();
         for (Employee employee : staff) {
-            int choice = employee.getSalary().compareTo(averageSalary);
-            if (choice == -1) {
-                transferList.add(employee);
+            List<Employee> couple = new ArrayList<>();
+            if (employee.getSalary().compareTo(averageSalary) == -1) {
+                couple.add(employee);
+                transferList.add(new ArrayList<>(couple));
+                for (Employee employee1 : staff) {
+                    if (employee.equals(employee1)) {
+                        continue;
+                    }
+
+                    int choice1 = calculateAverageSalary(couple).add(employee.getSalary()).compareTo(averageSalary);
+                    if (choice1 == -1) {
+                        couple.add(employee1);
+                        transferList.add(new ArrayList<>(couple));
+                    }
+                    couple.remove(employee1);
+
+                }
+
+
             }
         }
         return transferList;
