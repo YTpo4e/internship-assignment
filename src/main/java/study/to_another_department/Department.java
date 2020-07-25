@@ -69,6 +69,7 @@ public class Department {
 
     public final List<List<Employee>> transferList = new ArrayList<>();
     List<Employee> couple = new ArrayList<>();
+
     public void fromTransferList(int i) {
 
         BigDecimal averageSalary = getAverageSalary();
@@ -95,13 +96,13 @@ public class Department {
                 fromTransferList(0);
                 couple.remove(employee);
                 }
+                couple.remove(employee);
             }
         }
 
         if (i + 1 < staff.size()){
             fromTransferList(i + 1);
         }
-
 
     }
 

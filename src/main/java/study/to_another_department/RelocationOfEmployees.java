@@ -86,8 +86,6 @@ public class RelocationOfEmployees {
             departments.getValue().fromTransferList(0);
             List<List<Employee>> listToTransfer = departments.getValue().transferList;
 
-            //for (List<Employee> employeeList : listToTransfer){
-             //   String information;
                  for (List<Employee> employeeList : listToTransfer) {
                      BigDecimal currentAverage = transferTo.getAverageSalary();
 
