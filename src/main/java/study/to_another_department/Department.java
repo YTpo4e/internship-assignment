@@ -78,9 +78,11 @@ public class Department {
         if(couple.isEmpty()) {
             if (employee.getSalary().compareTo(averageSalary) == -1) {
                 couple.add(employee);
+                if (!transferList.contains(couple)) {
                 transferList.add(new ArrayList<>(couple));
                 fromTransferList(0);
-
+                }
+                couple.remove(employee);
             }
         } else  {
             BigDecimal salary = calculateAverageSalary(couple).multiply(new BigDecimal(couple.size()));
@@ -94,7 +96,6 @@ public class Department {
                 transferList.add(new ArrayList<>(couple));
 
                 fromTransferList(0);
-                couple.remove(employee);
                 }
                 couple.remove(employee);
             }
