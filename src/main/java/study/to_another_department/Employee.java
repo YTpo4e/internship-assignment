@@ -3,7 +3,7 @@ package study.to_another_department;
 import java.math.BigDecimal;
 import java.util.Objects;
 
-public class Employee implements Comparable<Employee>{
+public class Employee implements Comparable<Employee> {
     final private String firstName;
     final private String secondName;
     private BigDecimal salary;
@@ -20,7 +20,7 @@ public class Employee implements Comparable<Employee>{
     public static Employee createEmployee(int counter, String... em) {
 
         if (em.length != 5) {
-            System.out.println("Неверное количество аргументов в строке " + counter);
+            System.out.println("Неверное количество аргументов в строке " + counter + "\n" + "Нужное количество 5!!!");
             return null;
         }
 
@@ -38,7 +38,7 @@ public class Employee implements Comparable<Employee>{
         } catch (NumberFormatException e) {
             System.out.println("Line " + e.getMessage() + " contains an incorrect salary. ");
         } catch (NullPointerException e) {
-            System.out.println("Какое-то значение пустое в строке "  + counter + ".");
+            System.out.println("Какое-то значение пустое в строке " + counter + ".");
         }
         return null;
     }
@@ -61,7 +61,7 @@ public class Employee implements Comparable<Employee>{
 
     static boolean checkingForEmptyArguments(String... infoEmployee) {
         for (String string : infoEmployee) {
-            if (string.matches("\\s*") || Objects.equals(string.trim(), "null")) {
+            if (string.matches("\\s*") || string.length() < 0) {
                 return true;
             }
         }
