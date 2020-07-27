@@ -1,7 +1,6 @@
 package study.to_another_department;
 
 import java.io.*;
-import java.lang.reflect.Array;
 import java.math.BigDecimal;
 import java.util.*;
 
@@ -33,22 +32,16 @@ public class RelocationOfEmployees {
             while (scanner.hasNextLine()) {
                 String line = scanner.nextLine();
                 String[] employeeInformation = line.split(";");
-
-                Employee employee = Employee.createEmployee(counter, employeeInformation);
-
-                if (employee == null) {
+                if (Employee.checkingArguments(counter, employeeInformation)) {
                     counter++;
                     continue;
                 }
-
+                Employee employee = new Employee(employeeInformation);
                 Department department = departmentMap.getOrDefault(employeeInformation[2].trim(), new Department());
                 department.addEmployee(employee);
                 departmentMap.putIfAbsent(employeeInformation[2].trim(), department);
-
                 counter++;
-
             }
-
         } catch (IOException e) {
             System.out.println("Cannot read file " + e.getMessage());
         }
@@ -89,23 +82,21 @@ public class RelocationOfEmployees {
 
             for (List<Employee> employeeList : listToTransfer) {
                 BigDecimal currentAverage = transferTo.getAverageSalary();
-
                 if (currentAverage.compareTo(calculateAverageSalary(employeeList)) < 0) {
-                    String information = "Сотрудники из отдела " + departments.getKey() + ": ";
+                    StringBuffer stringBuffer = new StringBuffer("Сотрудники из отдела " + departments.getKey() + ": ");
                     for (Employee employee : employeeList) {
-                        information += employee.getFirstName() + " " + employee.getSecondName() + ",";
+                        stringBuffer.append(employee.getFirstName()).append(" ").append(employee.getSecondName()).append(",");
                     }
-
-                    information += " в отдел " + current.getKey() + "\n";
+                    stringBuffer.append("в отдел ").append(current.getKey()).append("\n");
+                    String information = String.valueOf(stringBuffer);
                     writeToFile(information, fileWriter);
-
                 }
             }
         }
     }
 
 
-    static void writeToFile(String information, FileWriter fileWriter) {
+    private static void writeToFile(String information, FileWriter fileWriter) {
         try {
             fileWriter.write(information);
         } catch (IOException e) {

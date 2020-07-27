@@ -1,7 +1,7 @@
 package study.to_another_department;
 
 import java.math.BigDecimal;
-import java.util.Objects;
+
 
 public class Employee implements Comparable<Employee> {
     final private String firstName;
@@ -9,38 +9,11 @@ public class Employee implements Comparable<Employee> {
     private BigDecimal salary;
     private String position;
 
-    private Employee(String[] employee) {
+    Employee(String[] employee) {
         firstName = employee[0].trim();
         secondName = employee[1].trim();
         salary = new BigDecimal(employee[3].trim());
         position = employee[4].trim();
-    }
-
-
-    public static Employee createEmployee(int counter, String... em) {
-
-        if (em.length != 5) {
-            System.out.println("Неверное количество аргументов в строке " + counter + "\n" + "Нужное количество 5!!!");
-            return null;
-        }
-
-        try {
-            if (checkingForEmptyArguments(em)) {
-                throw new NullPointerException();
-            }
-            String[] decimalPoint = em[3].trim().split("\\.");
-            if (decimalPoint.length > 1) {
-                if (decimalPoint[1].length() > 2) {
-                    throw new NumberFormatException(String.valueOf(counter));
-                }
-            }
-            return new Employee(em);
-        } catch (NumberFormatException e) {
-            System.out.println("Line " + e.getMessage() + " contains an incorrect salary. ");
-        } catch (NullPointerException e) {
-            System.out.println("Какое-то значение пустое в строке " + counter + ".");
-        }
-        return null;
     }
 
     public String getFirstName() {
@@ -59,12 +32,38 @@ public class Employee implements Comparable<Employee> {
         return position;
     }
 
-    static boolean checkingForEmptyArguments(String... infoEmployee) {
-        for (String string : infoEmployee) {
-            if (string.matches("\\s*") || string.length() < 0) {
-                return true;
+    public static boolean checkingArguments(int counter, String... infoEmployee) {
+        try {
+            if (infoEmployee.length != 5) {
+                throw new Exception("Неверное количество аргументов в строке " + counter + "\n" + "Нужное количество 5!!!");
             }
+            if (infoEmployee[0].trim().length() == 0) {
+                throw new Exception("Не указано имя!");
+            }
+            if (infoEmployee[1].trim().length() == 0) {
+                throw new Exception("Не указана фамилия!");
+            }
+            if (infoEmployee[2].trim().length() == 0) {
+                throw new Exception("Не укзан отдел!");
+            }
+            if (infoEmployee[3].trim().length() == 0) {
+                throw new Exception("Не указана зарплата!");
+            }
+            String[] decimalPoint = infoEmployee[3].trim().split("\\.");
+            if (decimalPoint.length > 1) {
+                if (decimalPoint[1].length() > 2) {
+                    throw new Exception("Зарплата указана неверна!");
+                }
+            }
+            if (infoEmployee[4].trim().length() == 0) {
+                throw new Exception("Не указана должномть!");
+            }
+
+        } catch (Exception e) {
+            System.out.println(e.getMessage() + "Строка " + counter);
+            return true;
         }
+
         return false;
     }
 
