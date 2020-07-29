@@ -9,11 +9,13 @@ public class Employee implements Comparable<Employee> {
     private BigDecimal salary;
     private String position;
 
-    Employee(String[] employee) {
-        firstName = employee[0].trim();
-        secondName = employee[1].trim();
-        salary = new BigDecimal(employee[3].trim());
-        position = employee[4].trim();
+
+    Employee(String line) {
+        String[] infoEmployee = line.split(";");
+        firstName = infoEmployee[0].trim();
+        secondName = infoEmployee[1].trim();
+        salary = new BigDecimal(infoEmployee[3].trim());
+        position = infoEmployee[4].trim();
     }
 
     public String getFirstName() {
@@ -32,7 +34,8 @@ public class Employee implements Comparable<Employee> {
         return position;
     }
 
-    public static boolean checkingArguments(int counter, String... infoEmployee) {
+    public static boolean checkingArguments(int counter, String line) {
+        String[] infoEmployee = line.split(";");
         try {
             if (infoEmployee.length != 5) {
                 throw new Exception("Неверное количество аргументов в строке " + counter + "\n" + "Нужное количество 5!!!");
@@ -56,15 +59,15 @@ public class Employee implements Comparable<Employee> {
                 }
             }
             if (infoEmployee[4].trim().length() == 0) {
-                throw new Exception("Не указана должномть!");
+                throw new Exception("Не указана должность!");
             }
 
         } catch (Exception e) {
             System.out.println(e.getMessage() + "Строка " + counter);
-            return true;
+            return false;
         }
 
-        return false;
+        return true;
     }
 
     @Override

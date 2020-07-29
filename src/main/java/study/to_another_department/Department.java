@@ -8,6 +8,7 @@ import java.util.*;
 public class Department {
 
     private List<Employee> staff = new ArrayList<>();
+    private String departmentName;
 
     Department() {
 
@@ -15,6 +16,14 @@ public class Department {
 
     Department(List<Employee> staff) {
         this.staff = new ArrayList<>(staff);
+    }
+
+    public String getDepartmentName() {
+        return departmentName;
+    }
+
+    public void setDepartmentName(String departmentName) {
+        this.departmentName = departmentName;
     }
 
     public Employee getEmployee(int i) {
@@ -35,7 +44,6 @@ public class Department {
 
 
     public BigDecimal getAverageSalary() {
-        Collections.sort(staff);
         return calculateAverageSalary(staff);
     }
 
@@ -64,8 +72,10 @@ public class Department {
     }
 
 
-    public List<List<Employee>> fromTransferList(List<List<Employee>> lists, ArrayList<Employee> temp, int i) {
-        System.out.println(lists.size());
+    public List<List<Employee>> fromTransferList(LinkedList<Employee> temp, int i) {
+
+        List<List<Employee>> lists = new LinkedList<>();
+
         BigDecimal averageSalary = getAverageSalary();
         Employee employee = staff.get(i);
 
@@ -73,7 +83,9 @@ public class Department {
             if (employee.getSalary().compareTo(averageSalary) < 0) {
                 temp.add(employee);
                 lists.add(new ArrayList<>(temp));
-                if (i + 1 < staff.size()) fromTransferList(lists, temp, i + 1);
+                if (i + 1 < staff.size()) {
+                    lists.addAll(fromTransferList(temp, i + 1));
+                }
                 temp.remove(employee);
             }
         } else {
@@ -84,13 +96,15 @@ public class Department {
             if (salary.compareTo(averageSalary) < 0) {
                 temp.add(employee);
                 lists.add(new ArrayList<>(temp));
-                if (i + 1 < staff.size()) fromTransferList(lists, temp, i + 1);
+                if (i + 1 < staff.size()) {
+                    lists.addAll(fromTransferList(temp, i + 1));
+                }
                 temp.remove(employee);
             }
         }
 
         if (i + 1 < staff.size()) {
-            fromTransferList(lists, temp, i + 1);
+            lists.addAll(fromTransferList(temp, i + 1));
         }
 
         return lists;
