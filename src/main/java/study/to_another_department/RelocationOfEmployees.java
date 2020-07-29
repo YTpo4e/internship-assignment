@@ -3,7 +3,6 @@ package study.to_another_department;
 import java.io.*;
 import java.math.BigDecimal;
 import java.util.*;
-
 import static study.to_another_department.Department.calculateAverageSalary;
 
 public class RelocationOfEmployees {
