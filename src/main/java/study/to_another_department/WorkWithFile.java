@@ -8,6 +8,14 @@ import java.util.Map;
 import java.util.Scanner;
 
 public class WorkWithFile {
+    public static void writeToFile(String out, String info) {
+        try (FileWriter fileWriter = new FileWriter(out)) {
+            fileWriter.write(info);
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
     public static Map<String, Department> downloadFromFile(String input) {
         File file = new File(input);
 
@@ -33,13 +41,5 @@ public class WorkWithFile {
         }
 
         return departmentMap;
-    }
-
-    public static void writeToFile(String information, FileWriter fileWriter) {
-        try {
-            fileWriter.write(information);
-        } catch (IOException e) {
-            System.out.println("Не удалось записать в файл");
-        }
     }
 }

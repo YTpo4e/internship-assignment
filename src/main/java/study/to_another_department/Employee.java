@@ -74,4 +74,9 @@ public class Employee implements Comparable<Employee> {
     public int compareTo(Employee o) {
         return getSalary().compareTo(o.getSalary());
     }
+
+    @Override
+    public String toString() {
+        return secondName + " " + firstName + " " + position + " " + salary + ". ";
+    }
 }
